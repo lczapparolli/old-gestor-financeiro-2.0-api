@@ -1,0 +1,20 @@
+{
+  "name": "gestor-financeiro-api",
+  "version": "1.0.0",
+  "description": "Server side of gestor-financeiro-2.0 project",
+  "private": true,
+  "author": "Luis Zapparolli <lczapparolli@gmail.com>",
+  "license": "Apache-2.0",
+  
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "sequelize": "^4.38.0"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^4.1.1"
+  }
+}
