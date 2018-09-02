@@ -20,7 +20,7 @@ This project is a new version from my older project [gestor-financeiro](https://
 
 Both, API and WebApp were built using NodeJS technologies.
 
-API was built with [Loopback](https://loopback.io/) framework while WebApp is using [React](https://reactjs.org/).
+API was built with [Express](https://expressjs.com/) framework while WebApp is using [React](https://reactjs.org/).
 
 ## Setup
 
@@ -28,7 +28,6 @@ First install NodeJS and NPM
 
 For API:
 
-1. Install the Loopback framework client running: `npm install -g loopback-cli`
 1. Jump into api folder: `cd api`
 1. Install dependencies: `npm install`
 
