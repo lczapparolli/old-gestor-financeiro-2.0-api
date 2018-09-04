@@ -2,3 +2,6 @@
 
 # dependencies
 /node_modules
+
+#development and test databases
+/db/*.sqlite3
