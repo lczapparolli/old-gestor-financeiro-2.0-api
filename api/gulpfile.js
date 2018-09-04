@@ -27,6 +27,22 @@ gulp.task('db:cleanup', () => {
 //DB Tasks-------------------------------
 
 
+//Exec Tasks-----------------------------
+gulp.task('exec:express', ['db:migrate'], (done) => {
+  var server = nodemon({
+    watch: ['index.js', 'app/**/*.js', 'db/config.json'],
+    done: done
+  });
+
+  server.on('quit', () => {
+    done();
+  });
+});
+//Exec Tasks-----------------------------
+
+
 //Exports to Gulp------------------------
 gulp.task('test', ['test:env', 'db:migrate', 'db:cleanup']);
+
+gulp.task('run', ['db:migrate', 'exec:express']);
 //Exports to Gulp------------------------
