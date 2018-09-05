@@ -4,12 +4,20 @@ const gulp = require('gulp');
 const exec = require('child_process').exec;
 const del = require('del');
 const nodemon = require('gulp-nodemon');
+const mocha = require('gulp-mocha');
 
 //Test tasks-----------------------------
 gulp.task('test:env', (done) => {
   process.env.NODE_ENV = 'test';
   done();
 });
+
+gulp.task('test:run', ['db:cleanup', 'db:migrate'], () => {
+  return gulp.src(['test/**/*.js'])
+  .pipe(mocha({
+    reporter: 'spec'
+  }));
+})
 //Test tasks-----------------------------
 
 
@@ -42,7 +50,7 @@ gulp.task('exec:express', ['db:migrate'], (done) => {
 
 
 //Exports to Gulp------------------------
-gulp.task('test', ['test:env', 'db:migrate', 'db:cleanup']);
+gulp.task('test', ['test:env', 'test:run']);
 
 gulp.task('run', ['db:migrate', 'exec:express']);
 //Exports to Gulp------------------------

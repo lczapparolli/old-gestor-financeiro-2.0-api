@@ -20,7 +20,15 @@ This project is a new version from my older project [gestor-financeiro](https://
 
 Both, API and WebApp were built using NodeJS technologies.
 
-API was built with [Express](https://expressjs.com/) framework while WebApp is using [React](https://reactjs.org/).
+API was built with:
+
+- [Express](https://expressjs.com/) framework for server
+- [Gulp](https://gulpjs.com/) for task automation
+- [Sequelize](http://docs.sequelizejs.com/) for ORM
+
+And WebApp is using:
+
+- [React](https://reactjs.org/) for interface building
 
 ## Setup
 
@@ -28,7 +36,7 @@ First install NodeJS and NPM
 
 For API:
 
-1. Jump into api folder: `cd api`
+1. Jump into API folder: `cd api`
 1. Install dependencies: `npm install`
 
 For Web Application:
@@ -38,7 +46,12 @@ For Web Application:
 
 ## Run
 
-_Coming soon_
+To run API:
+
+1. Jump into API folder: `cd api`
+1. Run `gulp run`
+
+Run `gulp --tasks` for more options
 
 ## Deploy
 
