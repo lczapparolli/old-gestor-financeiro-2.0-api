@@ -1,6 +1,9 @@
 const express = require('express');
+const parser = require('body-parser');
 const UserController = require('./app/controllers/userController');
 const app = express();
+
+app.use(parser.json());
 
 app.get('/', (request, response) => {
     response.send('gestor-financeiro-2.0');

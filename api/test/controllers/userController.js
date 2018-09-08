@@ -9,23 +9,37 @@ chai.use(chaiPromised);
 
 var server = chai.request(app).keepOpen();
 
+var userData = {
+}
+
 describe('UserController', function() {
     describe('User creation', () => {
         it('Should have a method for adding a new user', () => {
-            var request = server.post('/users').send();
-            return expect(request).to.eventually.have.property('status', 200);
+            var response = server.post('/users').send();
+            return expect(response).to.eventually.have.property('status').not.equal(404);
         });
+
+        it('Should validate user fields', () => {
+            var response = server.post('/users').send(userData);
+
+            return Promise.all([
+                expect(response).to.eventually.have.property('status', 500),
+                expect(response).to.eventually.have.nested.property('body.length').greaterThan(0) 
+                // There is no need to verify individual fields, since the user model tests do it
+            ]);
+        });
+        
     });
 
     describe('User login', () => {
         it('Should have a method for user login', () => {
-            var request = server.post('/users/login').send();
-            return expect(request).to.eventually.have.property('status', 200);
+            var response = server.post('/users/login').send();
+            return expect(response).to.eventually.have.property('status').not.equal(404);
         });
     });
 });
 
-after((done) => {
-    server.close(done);
+after(() => {
     console.log('Server is closed');
+    return server.close();
 });
