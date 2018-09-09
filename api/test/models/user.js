@@ -8,7 +8,7 @@ chai.use(chaiPromised);
 var userData = {
     name: 'User name',
     email: 'teste@user.com',
-    password_digest: '123456',
+    password: '123456',
     active: true
 };
 
@@ -66,5 +66,21 @@ describe('User', function() {
         user.email = 'invalid email';
         var validation = user.validate();
         return expect(validation).to.be.rejected.and.eventually.have.nested.property('errors[0].validatorKey', 'isEmail');
+    });
+
+    it('Should validate null password', () => {
+        var user = db.User.build(userData);
+        user.password = null;
+
+        var validation = user.validate();
+        return expect(validation).to.be.rejected.and.eventually.have.nested.property('errors[0].validatorKey', 'is_null');
+    });
+
+    it('Should validate password length', () => {
+        var user = db.User.build(userData);
+        user.password = '123';
+
+        var validation = user.validate();
+        return expect(validation).to.be.rejected.and.eventually.have.nested.property('errors[0].validatorKey', 'len');
     });
 })

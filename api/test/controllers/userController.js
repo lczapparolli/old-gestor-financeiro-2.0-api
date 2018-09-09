@@ -57,6 +57,12 @@ describe('UserController', function() {
                 expect(response).to.have.property('status', 500);
             });
         });
+
+        it('Shoud store encripted password', () => {
+            return db.User.findOne({ where: { email: userData.email} } ).then(user => {
+                expect(user).to.have.property('password_digest').not.equal(userData.password);
+            });
+        });
     });
 
     describe('User login', () => {

@@ -6,7 +6,7 @@ function validateUserFields(request, response, next) {
     var user = User.build({
         name: request.body.name,
         email: request.body.email,
-        password_digest: request.body.password,
+        password: request.body.password,
         active: true
     });
 
