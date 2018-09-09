@@ -2,8 +2,14 @@ const db = require('../models/db');
 const User = db.User;
 
 
-function validateUser(request, response, next) {
-    var user = User.build(request.body);
+function validateUserFields(request, response, next) {
+    var user = User.build({
+        name: request.body.name,
+        email: request.body.email,
+        password_digest: request.body.password,
+        active: true
+    });
+
     user.validate().then(user => {
         request.body = user;
         next();
@@ -12,8 +18,25 @@ function validateUser(request, response, next) {
     });
 }
 
+function validateRegisteredEmail(request, response, next) {
+    var user = request.body;
+    User.count({ where: { email: user.email } }).then(count => {
+        if (count === 0)
+            next();
+        else {
+            response.status(500).send([
+                { field: 'email', message: 'Email already used' }
+            ]);
+        }
+    });
+}
+
 function createUser(request, response) {
-    response.sendStatus(200);
+    request.body.save().then(user => {
+        response.sendStatus(200);
+    }).catch(error => {
+        response.sendStatus(500);
+    });
 }
 
 function loginUser(request, response) {
@@ -21,5 +44,5 @@ function loginUser(request, response) {
 }
 //module.exports = UserController;
 
-exports.createUser = [validateUser, createUser];
+exports.createUser = [validateUserFields, validateRegisteredEmail, createUser];
 exports.loginUser = [loginUser];
