@@ -21,8 +21,8 @@
     "chai-http": "^4.2.0",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
+    "gulp-live-server": "0.0.31",
     "gulp-mocha": "^6.0.0",
-    "gulp-nodemon": "^2.2.1",
     "sequelize-cli": "^4.1.1",
     "sqlite3": "^4.0.2"
   }

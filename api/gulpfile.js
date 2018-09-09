@@ -2,8 +2,8 @@ const MODULES_BIN = 'node_modules/.bin/';
 
 const gulp = require('gulp');
 const exec = require('child_process').exec;
+const liveServer = require('gulp-live-server');
 const del = require('del');
-const nodemon = require('gulp-nodemon');
 const mocha = require('gulp-mocha');
 
 //Test tasks-----------------------------
@@ -36,14 +36,13 @@ gulp.task('db:cleanup', () => {
 
 
 //Exec Tasks-----------------------------
-gulp.task('exec:express', ['db:migrate'], (done) => {
-  var server = nodemon({
-    watch: ['index.js', 'app/**/*.js', 'db/config.json'],
-    done: done
-  });
-
-  server.on('quit', () => {
-    done();
+gulp.task('exec:express', ['db:migrate'], () => {
+  var server = liveServer.new('./index.js');
+  server.start();
+  gulp.watch(['index.js', 'app/**/*.js'], file => {
+    console.log('reloading');
+    server.start();
+    server.notify(file);
   });
 });
 //Exec Tasks-----------------------------
