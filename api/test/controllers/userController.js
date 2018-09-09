@@ -15,7 +15,7 @@ var userData = {
     name: 'User test',
     email: 'user@test.com',
     password: 'pass123'
-}
+};
 
 describe('UserController', function() {
     describe('User creation', () => {
@@ -53,9 +53,6 @@ describe('UserController', function() {
                 expect(response).to.eventually.have.nested.property('body[0].field', 'email'),
                 expect(response).to.eventually.have.nested.property('body[0].message', 'Email already used')                
             ]);
-            return response.then(response => {
-                expect(response).to.have.property('status', 500);
-            });
         });
 
         it('Shoud store encripted password', () => {
@@ -74,6 +71,5 @@ describe('UserController', function() {
 });
 
 after(() => {
-    console.log('Server is closed');
     return server.close();
 });

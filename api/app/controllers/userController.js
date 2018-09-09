@@ -32,9 +32,9 @@ function validateRegisteredEmail(request, response, next) {
 }
 
 function createUser(request, response) {
-    request.body.save().then(user => {
+    request.body.save().then(() => {
         response.sendStatus(200);
-    }).catch(error => {
+    }).catch(() => {
         response.sendStatus(500);
     });
 }

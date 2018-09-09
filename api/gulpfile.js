@@ -9,49 +9,48 @@ const del = require('del');
 
 //Test tasks-----------------------------
 gulp.task('test:env', (done) => {
-  process.env.NODE_ENV = 'test';
-  done();
+    process.env.NODE_ENV = 'test';
+    done();
 });
 
 gulp.task('test:run', ['db:cleanup', 'db:migrate'], () => {
-  return gulp.src(['test/**/*.js'])
-  .pipe(mocha({
-    reporter: 'spec'
-  }));
-})
+    return gulp.src(['test/**/*.js'])
+        .pipe(mocha({
+            reporter: 'spec'
+        }));
+});
 
 gulp.task('test:lint', () => {
-  return gulp.src(['index.js', 'gulpfile.js', 'app/**/*.js', 'test/**/*.js'])
-  .pipe(eslint())
-  .pipe(eslint.format())
-  .pipe(eslint.failAfterError());
+    return gulp.src(['index.js', 'gulpfile.js', 'app/**/*.js', 'test/**/*.js'])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
 });
 //Test tasks-----------------------------
 
 
 //DB Tasks-------------------------------
 gulp.task('db:migrate', (done) => {
-  exec(MODULES_BIN + '/sequelize db:migrate', (err, stdout, stderr) => {
-    done(err);
-  });
+    exec(MODULES_BIN + '/sequelize db:migrate', (err) => {
+        done(err);
+    });
 });
 
 gulp.task('db:cleanup', () => {
-  var env = process.env.NODE_ENV || 'development';
-  return del('db/' + env + '.sqlite3');
+    var env = process.env.NODE_ENV || 'development';
+    return del('db/' + env + '.sqlite3');
 });
 //DB Tasks-------------------------------
 
 
 //Exec Tasks-----------------------------
 gulp.task('exec:express', ['db:migrate'], () => {
-  var server = liveServer.new('./index.js');
-  server.start();
-  gulp.watch(['index.js', 'app/**/*.js'], file => {
-    console.log('reloading');
+    var server = liveServer.new('./index.js');
     server.start();
-    server.notify(file);
-  });
+    gulp.watch(['index.js', 'app/**/*.js'], file => {
+        server.start();
+        server.notify(file);
+    });
 });
 //Exec Tasks-----------------------------
 

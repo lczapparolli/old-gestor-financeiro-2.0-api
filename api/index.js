@@ -13,6 +13,5 @@ app.post('/users', UserController.createUser);
 app.post('/users/login', UserController.loginUser);
 
 module.exports = app.listen(3000, () => {
-    console.log('Server is listening!');
 });
 

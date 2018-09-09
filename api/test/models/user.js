@@ -83,4 +83,4 @@ describe('User', function() {
         var validation = user.validate();
         return expect(validation).to.be.rejected.and.eventually.have.nested.property('errors[0].validatorKey', 'len');
     });
-})
+});
