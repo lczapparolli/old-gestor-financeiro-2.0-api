@@ -1,10 +1,11 @@
 const MODULES_BIN = 'node_modules/.bin/';
 
 const gulp = require('gulp');
-const exec = require('child_process').exec;
-const liveServer = require('gulp-live-server');
-const del = require('del');
 const mocha = require('gulp-mocha');
+const liveServer = require('gulp-live-server');
+const eslint = require('gulp-eslint');
+const exec = require('child_process').exec;
+const del = require('del');
 
 //Test tasks-----------------------------
 gulp.task('test:env', (done) => {
@@ -18,6 +19,13 @@ gulp.task('test:run', ['db:cleanup', 'db:migrate'], () => {
     reporter: 'spec'
   }));
 })
+
+gulp.task('test:lint', () => {
+  return gulp.src(['index.js', 'gulpfile.js', 'app/**/*.js', 'test/**/*.js'])
+  .pipe(eslint())
+  .pipe(eslint.format())
+  .pipe(eslint.failAfterError());
+});
 //Test tasks-----------------------------
 
 
@@ -49,7 +57,7 @@ gulp.task('exec:express', ['db:migrate'], () => {
 
 
 //Exports to Gulp------------------------
-gulp.task('test', ['test:env', 'test:run']);
+gulp.task('test', ['test:env', 'test:lint', 'test:run']);
 
 gulp.task('run', ['db:migrate', 'exec:express']);
 //Exports to Gulp------------------------
