@@ -12,7 +12,7 @@ var userData = {
     active: true
 };
 
-describe('User', function() {
+describe('User model', function() {
     it('should exists a User model', () => {
         expect(db).to.have.property('User');
     });
@@ -82,5 +82,11 @@ describe('User', function() {
 
         var validation = user.validate();
         return expect(validation).to.be.rejected.and.eventually.have.nested.property('errors[0].validatorKey', 'len');
+    });
+
+    it('Should not exposes uncrypted password', () => {
+        var user = db.User.build(userData);
+
+        expect(user).to.have.property('password').not.equal(userData.password);
     });
 });
