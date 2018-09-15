@@ -29,7 +29,8 @@ describe('UserController', function() {
 
             return Promise.all([
                 expect(response).to.eventually.have.property('status', 500),
-                expect(response).to.eventually.have.nested.property('body.length').greaterThan(0) 
+                expect(response).to.eventually.have.nested.property('body.length').greaterThan(0),
+                expect(response).to.eventually.have.nested.property('body[0]').and.have.all.keys('message', 'field')
                 // There is no need to verify individual fields, since the user model tests do it
             ]);
         });

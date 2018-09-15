@@ -1,4 +1,5 @@
 const db = require('../models/db');
+const transformValidation = require('../helpers/transformValidation');
 const User = db.User;
 
 
@@ -13,8 +14,12 @@ function validateUserFields(request, response, next) {
     user.validate().then(user => {
         request.body = user;
         next();
+        return null;
     }).catch(err => {
-        response.status(500).send(err.errors);
+        response.status(500).send(
+            transformValidation(err.errors)
+        );
+        return null;
     });
 }
 
@@ -28,6 +33,7 @@ function validateRegisteredEmail(request, response, next) {
                 { field: 'email', message: 'Email already used' }
             ]);
         }
+        return null;
     });
 }
 
@@ -42,7 +48,6 @@ function createUser(request, response) {
 function loginUser(request, response) {
     response.sendStatus(200);
 }
-//module.exports = UserController;
 
 exports.createUser = [validateUserFields, validateRegisteredEmail, createUser];
 exports.loginUser = [loginUser];
