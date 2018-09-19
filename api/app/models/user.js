@@ -48,8 +48,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         active: DataTypes.BOOLEAN
     }, { });
-    User.associate = function () {
-        // associations can be defined here
+    User.associate = function (models) {
+        models.User.hasMany(models.Access);
     };
     return User;
 };
