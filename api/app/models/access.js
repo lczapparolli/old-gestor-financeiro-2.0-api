@@ -2,7 +2,10 @@
 module.exports = (sequelize, DataTypes) => {
     const Access = sequelize.define('Access', {
         userId: DataTypes.INTEGER,
-        accessUUID: DataTypes.UUID,
+        accessUUID: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4
+        },
         loginDate: DataTypes.DATE,
         lastRequest: DataTypes.DATE,
         userAgent: DataTypes.STRING,
