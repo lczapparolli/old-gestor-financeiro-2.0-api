@@ -22,7 +22,7 @@ describe('User model', function() {
         expect(user).to.have.property('id');
         expect(user).to.have.property('name');
         expect(user).to.have.property('email');
-        expect(user).to.have.property('password_digest');
+        expect(user).to.have.property('passwordDigest');
         expect(user).to.have.property('active');
     });
 

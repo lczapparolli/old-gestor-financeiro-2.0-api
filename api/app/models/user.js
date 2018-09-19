@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
                 }
             }
         },
-        password_digest: {
+        passwordDigest: {
             type: DataTypes.STRING,
             allowNull: false
         },
@@ -32,10 +32,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             set: function (value) {
                 if ((typeof value === 'undefined') || (value === null)) {
-                    this.setDataValue('password_digest', null);
+                    this.setDataValue('passwordDigest', null);
                     this.setDataValue('password', null);
                 } else {
-                    this.setDataValue('password_digest', bcrypt.hashSync(value, 10));
+                    this.setDataValue('passwordDigest', bcrypt.hashSync(value, 10));
                     this.setDataValue('password', '*'.repeat(value.length));
                 }
             },
@@ -47,10 +47,7 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         active: DataTypes.BOOLEAN
-    }, 
-    {
-        underscored: true,
-    });
+    }, { });
     User.associate = function () {
         // associations can be defined here
     };

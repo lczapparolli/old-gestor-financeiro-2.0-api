@@ -14,17 +14,17 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
-      password_digest: {
+      passwordDigest: {
         type: Sequelize.STRING
       },
       active: {
         type: Sequelize.BOOLEAN
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       }
