@@ -28,7 +28,7 @@ describe('UserController', function() {
             var response = server.post('/users').send({});
 
             return Promise.all([
-                expect(response).to.eventually.have.property('status', 500),
+                expect(response).to.eventually.have.property('status', 400),
                 expect(response).to.eventually.have.nested.property('body.length').greaterThan(0),
                 expect(response).to.eventually.have.nested.property('body[0]').and.have.all.keys('message', 'field')
                 // There is no need to verify individual fields, since the user model tests do it
@@ -50,7 +50,7 @@ describe('UserController', function() {
             var response = server.post('/users').send(userData);
             
             return Promise.all([
-                expect(response).to.eventually.have.property('status', 500),
+                expect(response).to.eventually.have.property('status', 400),
                 expect(response).to.eventually.have.nested.property('body[0].field', 'email'),
                 expect(response).to.eventually.have.nested.property('body[0].message', 'Email already used')                
             ]);
@@ -60,13 +60,6 @@ describe('UserController', function() {
             return db.User.findOne({ where: { email: userData.email} } ).then(user => {
                 expect(user).to.have.property('passwordDigest').not.equal(userData.password);
             });
-        });
-    });
-
-    describe('User login', () => {
-        it('Should have a method for user login', () => {
-            var response = server.post('/users/login').send();
-            return expect(response).to.eventually.have.property('status').not.equal(404);
         });
     });
 });

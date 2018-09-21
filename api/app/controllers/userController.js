@@ -16,7 +16,7 @@ function validateUserFields(request, response, next) {
         next();
         return null;
     }).catch(err => {
-        response.status(500).send(
+        response.status(400).send(
             transformValidation(err.errors)
         );
         return null;
@@ -29,7 +29,7 @@ function validateRegisteredEmail(request, response, next) {
         if (count === 0)
             next();
         else {
-            response.status(500).send([
+            response.status(400).send([
                 { field: 'email', message: 'Email already used' }
             ]);
         }
@@ -45,9 +45,4 @@ function createUser(request, response) {
     });
 }
 
-function loginUser(request, response) {
-    response.sendStatus(200);
-}
-
 exports.createUser = [validateUserFields, validateRegisteredEmail, createUser];
-exports.loginUser = [loginUser];
