@@ -34,7 +34,7 @@ describe('Access model', function() {
         var access = db.Access.build({});
 
         expect(access).to.have.property('userId');
-        expect(access).to.have.property('accessUUID');
+        expect(access).to.have.property('UUID');
         expect(access).to.have.property('loginDate').instanceOf(Date);
         expect(access).to.have.property('lastRequest').instanceOf(Date);
         expect(access).to.have.property('userAgent');
@@ -56,9 +56,9 @@ describe('Access model', function() {
         return expect(access.validate()).to.be.rejected.and.eventually.have.nested.property('errors[0].validatorKey', 'is_null');
     });
 
-    it('Should validate null accessUUID', () => {
+    it('Should validate null UUID', () => {
         var access = db.Access.build(accessData);
-        access.accessUUID = null;
+        access.UUID = null;
 
         return expect(access.validate()).to.be.rejected.and.eventually.have.nested.property('errors[0].validatorKey', 'is_null');
     });
@@ -98,13 +98,13 @@ describe('Access model', function() {
         return expect(access.validate()).to.be.rejected.and.eventually.have.nested.property('errors[0].validatorKey', 'futureDate');
     });
 
-    it('Should validate duplicated accessUUID', () => {
+    it('Should validate duplicated UUID', () => {
         var access = db.Access.build(accessData);
-        var accessUUID = access.accessUUID;
+        var UUID = access.UUID;
         
         return access.save().then(() => {
             var newAccess = db.Access.build(accessData);
-            newAccess.accessUUID = accessUUID;
+            newAccess.UUID = UUID;
 
             var save = newAccess.save();
             return expect(save).to.be.rejected.and.eventually.have.nested.property('errors[0].validatorKey', 'not_unique');
