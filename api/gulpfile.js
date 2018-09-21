@@ -16,7 +16,8 @@ gulp.task('test:env', (done) => {
 gulp.task('test:run', ['db:cleanup', 'db:migrate'], () => {
     return gulp.src(['test/**/*.js'])
         .pipe(mocha({
-            reporter: 'spec'
+            reporter: 'spec',
+            slow: 0
         }));
 });
 
