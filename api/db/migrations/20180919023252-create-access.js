@@ -15,7 +15,8 @@ module.exports = {
       },
       accessUUID: {
         type: Sequelize.UUID,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       loginDate: {
         type: Sequelize.DATE,
