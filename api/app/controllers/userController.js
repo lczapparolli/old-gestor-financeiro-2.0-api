@@ -12,7 +12,7 @@ function validateUserFields(request, response, next) {
     });
 
     user.validate().then(user => {
-        request.body = user;
+        response.locals.user = user;
         next();
         return null;
     }).catch(err => {
@@ -38,7 +38,7 @@ function validateRegisteredEmail(request, response, next) {
 }
 
 function createUser(request, response) {
-    request.body.save().then(() => {
+    response.locals.user.save().then(() => {
         response.sendStatus(200);
     }).catch(() => {
         response.sendStatus(500);
