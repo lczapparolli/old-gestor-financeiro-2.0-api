@@ -1,5 +1,5 @@
 'use strict';
-const bcrypt = require('bcrypt');
+const crypt = require('../helpers/crypt');
 
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('User', {
@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
                     this.setDataValue('passwordDigest', null);
                     this.setDataValue('password', null);
                 } else {
-                    this.setDataValue('passwordDigest', bcrypt.hashSync(value, 10));
+                    this.setDataValue('passwordDigest', crypt.encrypt(value));
                     this.setDataValue('password', '*'.repeat(value.length));
                 }
             },
