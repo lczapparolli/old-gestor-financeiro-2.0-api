@@ -13,7 +13,9 @@ gulp.task('test:env', (done) => {
     done();
 });
 
-gulp.task('test:run', ['db:cleanup', 'db:migrate'], () => {
+gulp.task('test:prepare', ['test:env', 'db:cleanup', 'db:migrate']);
+
+gulp.task('test:run', ['test:prepare'], () => {
     return gulp.src(['test/**/*.js'])
         .pipe(mocha({
             reporter: 'spec',
@@ -57,7 +59,7 @@ gulp.task('exec:express', ['db:migrate'], () => {
 
 
 //Exports to Gulp------------------------
-gulp.task('test', ['test:env', 'test:lint', 'test:run']);
+gulp.task('test', ['test:lint', 'test:run']);
 
 gulp.task('run', ['db:migrate', 'exec:express']);
 //Exports to Gulp------------------------
