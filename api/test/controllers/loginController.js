@@ -11,12 +11,17 @@ chai.use(chaiPromised);
 var server = chai.request(app).keepOpen();
 
 var userData = {
-    name: 'User test',
-    email: 'user@test.com',
+    name: 'Login test',
+    email: 'login@test.com',
     password: 'pass123'
 };
 
 describe('LoginController', function() {
+    before(() => {
+        //Register login test user
+        return server.post('/users').send(userData);
+    });
+
     describe('User login', () => {
         it('Should have a method for user login', () => {
             var response = server.post('/users/login').send();
@@ -29,7 +34,7 @@ describe('LoginController', function() {
             });
 
             return Promise.all([
-                expect(response).to.eventually.have.property('status').equal(500),
+                expect(response).to.eventually.have.property('status').equal(400),
                 expect(response).to.eventually.have.nested.property('body[0].field', 'email'),
                 expect(response).to.eventually.have.nested.property('body[0].message', 'Email is required')
             ]);
@@ -42,7 +47,7 @@ describe('LoginController', function() {
             });
 
             return Promise.all([
-                expect(response).to.eventually.have.property('status').equal(500),
+                expect(response).to.eventually.have.property('status').equal(400),
                 expect(response).to.eventually.have.nested.property('body[0].field', 'email'),
                 expect(response).to.eventually.have.nested.property('body[0].message', 'Is not a valid email')
             ]);
@@ -54,14 +59,28 @@ describe('LoginController', function() {
             });
 
             return Promise.all([
-                expect(response).to.eventually.have.property('status').equal(500),
+                expect(response).to.eventually.have.property('status', 400),
                 expect(response).to.eventually.have.nested.property('body[0].field', 'password'),
                 expect(response).to.eventually.have.nested.property('body[0].message', 'Password is required')
             ]);
         });
 
-        it('Should fail when user and password do not match', () => {
-            chai.assert.fail(true, true, 'Not implemented');
+        it('Should fail when email do not exists', () => {
+            var response = server.post('/users/login').send({
+                email: 'different@email.com',
+                password: userData.password
+            });
+
+            return expect(response).to.eventually.have.property('status', 400);
+        });
+
+        it('Should fail when password do not match', () => {
+            var response = server.post('/users/login').send({
+                email: userData.email,
+                password: 'invalid password'
+            });
+
+            return expect(response).to.eventually.have.property('status', 400);
         });
 
         it('Should return a valid JWT when user and password match', () => {
