@@ -1,8 +1,11 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const chaiPromised = require('chai-as-promised');
+const jwt = require('jsonwebtoken');
 const app = require('../../index');
+const db = require('../../app/models/db');
 
+const tokenSecret = process.env.TOKEN_SECRET;
 const expect = chai.expect;
 
 chai.use(chaiHttp);
@@ -84,7 +87,42 @@ describe('LoginController', function() {
         });
 
         it('Should return a valid JWT when user and password match', () => {
-            chai.assert.fail(true, true, 'Not implemented');
+            var response = server.post('/users/login').send({
+                email: userData.email,
+                password: userData.password
+            });
+
+            return Promise.all([
+                expect(response).to.eventually.have.property('status', 200),
+                expect(response).to.eventually.have.nested.property('body.token').not.empty,
+                response.then(response => { jwt.verify(response.body.token, tokenSecret); })
+            ]);
+        });
+
+        it('Token should have a property access', () => {
+            var response = server.post('/users/login').send({
+                email: userData.email,
+                password: userData.password
+            });
+
+            return response.then(response => {
+                var token = jwt.decode(response.body.token, tokenSecret);
+                expect(token).to.have.property('access');
+            });
+        });
+
+        it('Should save an Access when user login', () => {
+            var accesses = db.Access.findAll({
+                include: [{
+                    model: db.User,
+                    where: { email: userData.email }
+                }]
+            });
+
+            return Promise.all([
+                expect(accesses).to.eventually.have.property('length').greaterThan(0),
+                expect(accesses).to.eventually.have.nested.property('[0].userAgent').not.null
+            ]);
         });
     });
 

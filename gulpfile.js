@@ -6,10 +6,12 @@ const liveServer = require('gulp-live-server');
 const eslint = require('gulp-eslint');
 const exec = require('child_process').exec;
 const del = require('del');
+const crypto = require('crypto');
 
 //Test tasks-----------------------------
 gulp.task('test:env', (done) => {
     process.env.NODE_ENV = 'test';
+    process.env.TOKEN_SECRET = crypto.randomBytes(48).toString('hex');
     done();
 });
 

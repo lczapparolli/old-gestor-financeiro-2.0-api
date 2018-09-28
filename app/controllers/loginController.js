@@ -1,8 +1,12 @@
+const jwt = require('jsonwebtoken');
 const db = require('../models/db');
 const crypt = require('../helpers/crypt');
 const validation = require('../helpers/validation');
 
+
 const User = db.User;
+const Access = db.Access;
+const tokenSecret = process.env.TOKEN_SECRET;
 
 function validateFields(request, response, next) {
     var body = request.body;
@@ -57,13 +61,38 @@ function validatePassword(request, response, next) {
         response.sendStatus(400);
 }
 
-function loginUser(request, response) {
-    response.sendStatus(200);
+function getUserAgent(request, response, next) {
+    response.locals.userAgent = request.get('User-Agent');
+    next();
+}
+
+function saveAccess(request, response, next) {
+    var access = Access.build({
+        userId: response.locals.user.id,
+        userAgent: response.locals.userAgent,
+        active: true
+    });
+
+    access.save().then(access => {
+        response.locals.accessUUID = access.UUID;
+        next();
+    }).catch(() => {
+        response.sendStatus(500);
+    });
+}
+
+function buildToken(request, response) {
+    var token = {
+        access: response.locals.accessUUID
+    };
+
+    var signedToken = jwt.sign(token, tokenSecret);
+    response.status(200).send({ token: signedToken });
 }
 
 function loginValidation(request, response) {
     response.sendStatus(200);
 }
 
-exports.loginUser = [validateFields, findUser, validatePassword, loginUser];
+exports.loginUser = [validateFields, findUser, validatePassword, getUserAgent, saveAccess, buildToken];
 exports.loginValidation = [loginValidation];
