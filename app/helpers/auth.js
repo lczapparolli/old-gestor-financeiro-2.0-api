@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const expressJWT = require('express-jwt');
 const tokenSecret = process.env.TOKEN_SECRET;
 
 /**
@@ -14,4 +15,17 @@ function signToken(payload) {
     return jwt.sign(payload, tokenSecret);
 }
 
+function getToken(request) {
+    return request.get('x-access-token');
+}
+
+function getMiddleware() {
+    return expressJWT({
+        secret: tokenSecret,
+        requestProperty: 'locals.accessToken',
+        getToken: getToken
+    });
+}
+
 exports.signToken = signToken;
+exports.getMiddleware = getMiddleware;

@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const db = require('../models/db');
 const crypt = require('../helpers/crypt');
 const validation = require('../helpers/validation');
@@ -6,7 +5,6 @@ const auth = require('../helpers/auth');
 
 const User = db.User;
 const Access = db.Access;
-const tokenSecret = process.env.TOKEN_SECRET;
 
 function validateFields(request, response, next) {
     var body = request.body;
@@ -91,30 +89,21 @@ function buildToken(request, response) {
 }
 
 function loginValidation(request, response) {
-    var token = request.get('x-access-token');
-    if (typeof token !== 'undefined') {
-        try {
-            var accessUUID = jwt.verify(token, tokenSecret).access;
-            
-            Access.findOne({
-                where: {
-                    UUID: accessUUID,
-                    active: true
-                }
-            }).then(access => {
-                if (access !== null)
-                    response.sendStatus(200);
-                else
-                    response.sendStatus(401);
-            }).catch(() => {
-                response.sendStatus(401);
-            });
-        } catch (err) {
-            response.sendStatus(401);
+    var accessUUID = request.locals.accessToken.access;
+    
+    Access.findOne({
+        where: {
+            UUID: accessUUID,
+            active: true
         }
-    } else {
-        response.status(401).send({ message: 'Token header not present' });
-    }
+    }).then(access => {
+        if (access !== null)
+            response.sendStatus(200);
+        else
+            response.sendStatus(401);
+    }).catch(() => {
+        response.sendStatus(401);
+    });
 }
 
 exports.loginUser = [validateFields, findUser, validatePassword, getUserAgent, saveAccess, buildToken];

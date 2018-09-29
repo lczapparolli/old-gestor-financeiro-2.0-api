@@ -1,14 +1,24 @@
 const express = require('express');
 const parser = require('body-parser');
 const morgan = require('morgan');
+
 //Controllers
 const UserController = require('./app/controllers/userController');
 const LoginController = require('./app/controllers/loginController');
+//Helpers
+const auth = require('./app/helpers/auth');
 
 const app = express();
 const env = process.env.NODE_ENV || 'development';
 
 app.use(parser.json());
+app.use(auth.getMiddleware().unless({
+    path: [ 
+        { url: '/users', methods: ['POST'] },
+        { url: '/users/login', methods: ['POST'] }
+    ]
+}));
+
 if (env === 'production') {
     app.use(morgan('combined'));
 } else if (env === 'development') {

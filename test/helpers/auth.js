@@ -24,4 +24,13 @@ describe('JsonWebToken helper', () => {
         });
     });
 
+    describe('getMiddleware', () => {
+        it('Should declare a `getMiddleware` function', () => {
+            expect(auth).to.respondTo('getMiddleware');
+        });
+
+        it('Should return a express middleware', () => {
+            expect(auth.getMiddleware()).to.be.a('function');
+        });
+    });
 });

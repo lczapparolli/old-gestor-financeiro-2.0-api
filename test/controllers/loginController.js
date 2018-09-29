@@ -168,8 +168,11 @@ describe('LoginController', function() {
             var newToken = jwt.sign({ access: decodedToken.access }, 'invalid secret');
             var response = server.get('/users/login').set('x-access-token', newToken).send();
             
-            return expect(response).to.eventually.have.property('status').equal(401);            
+            return expect(response).to.eventually.have.property('status').equal(401);
+        });
 
+        it ('Should fail when an inactive access is provided', () => {
+            chai.assert.fail(true, true, 'Not implemented');
         });
     });
 });
