@@ -18,38 +18,24 @@ This project is a new version from my older project [gestor-financeiro](https://
 
 ## Tecnologies used
 
-Both, API and WebApp were built using NodeJS technologies.
-
-API was built with:
+This API is built with NodeJS environment and uses the following packages:
 
 - [Express](https://expressjs.com/) framework for server
 - [Gulp](https://gulpjs.com/) for task automation
 - [Sequelize](http://docs.sequelizejs.com/) for ORM
-
-And WebApp is using:
-
-- [React](https://reactjs.org/) for interface building
+- [Mocha](https://mochajs.org) for test running
+- [Chai](https://www.chaijs.com/) for test assertions
 
 ## Setup
 
 First install NodeJS and NPM
 
-For API:
-
-1. Jump into API folder: `cd api`
+1. Install [Gulp](https://gulpjs.com/) globally
 1. Install dependencies: `npm install`
-
-For Web Application:
-
-1. Jump into web-app folder: `cd web-app`
-1. Install the dependencies: `npm install`
 
 ## Run
 
-To run API:
-
-1. Jump into API folder: `cd api`
-1. Run `gulp run`
+Just run `gulp run`
 
 Run `gulp --tasks` for more options
 
