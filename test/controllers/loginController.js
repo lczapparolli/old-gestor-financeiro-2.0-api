@@ -171,8 +171,16 @@ describe('LoginController', function() {
             return expect(response).to.eventually.have.property('status').equal(401);
         });
 
-        it ('Should fail when an inactive access is provided', () => {
-            chai.assert.fail(true, true, 'Not implemented');
+        it('Should fail when an inactive access is provided', () => {
+            var decodedToken = jwt.decode(userData.token);
+            
+            return db.Access.update(
+                { active: false },
+                { where: { UUID: decodedToken.access } }
+            ).then(() => {
+                var response = server.get('/users/login').set('x-access-token', userData.token).send();
+                return expect(response).to.eventually.have.property('status').equal(401);
+            });
         });
     });
 });
