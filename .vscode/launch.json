@@ -7,6 +7,28 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Mocha test current file",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "-u",
+                "tdd",
+                "--timeout",
+                "999999",
+                "--colors",
+                "--slow",
+                "0",
+                "${file}"
+            ],
+            "internalConsoleOptions": "openOnSessionStart",
+            "preLaunchTask": "gulp: test:prepare",
+            "env": {
+                "NODE_ENV": "test",
+                "TOKEN_SECRET": "secret-for-testing-only"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Mocha Tests",
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
             "args": [
@@ -23,7 +45,8 @@
             "internalConsoleOptions": "openOnSessionStart",
             "preLaunchTask": "gulp: test:prepare",
             "env": {
-                "NODE_ENV": "test"
+                "NODE_ENV": "test",
+                "TOKEN_SECRET": "secret-for-testing-only"
             }
         },
         {
@@ -33,7 +56,8 @@
             "program": "${workspaceFolder}/index.js",
             "preLaunchTask": "gulp: db:migrate",
             "env": {
-                "NODE_ENV": "development"
+                "NODE_ENV": "development",
+                "TOKEN_SECRET": "secret-for-testing-only"
             }
         }
     ]
