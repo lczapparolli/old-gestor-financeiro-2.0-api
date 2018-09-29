@@ -26,26 +26,24 @@ function validateFields(request, response, next) {
         next();
 }
 
-function findUser(request, response, next) {
+async function findUser(request, response, next) {
     var body = request.body;
 
-    User.findAll({
+    var users = await User.findAll({
         attributes: ['id', 'email', 'passwordDigest'],
         where: {
             email: body.email,
             active: true
         }
-    }).then(users => {
-        if (users.length === 1) {
-            response.locals.user = users[0];
-            next();
-            return null;
-        } else {
-            response.locals.user = null;
-            next();
-            return null;
-        }
     });
+
+    if (users.length === 1) {
+        response.locals.user = users[0];
+        next();
+    } else {
+        response.locals.user = null;
+        next();
+    }
 }
 
 function validatePassword(request, response, next) {
@@ -64,19 +62,19 @@ function getUserAgent(request, response, next) {
     next();
 }
 
-function saveAccess(request, response, next) {
-    var access = Access.build({
-        userId: response.locals.user.id,
-        userAgent: response.locals.userAgent,
-        active: true
-    });
+async function saveAccess(request, response, next) {
+    try {
+        var access = await Access.build({
+            userId: response.locals.user.id,
+            userAgent: response.locals.userAgent,
+            active: true
+        }).save();
 
-    access.save().then(access => {
         response.locals.accessUUID = access.UUID;
         next();
-    }).catch(() => {
+    } catch (err) {
         response.sendStatus(500);
-    });
+    }
 }
 
 function buildToken(request, response) {
@@ -88,22 +86,24 @@ function buildToken(request, response) {
     response.status(200).send({ token: signedToken });
 }
 
-function loginValidation(request, response) {
-    var accessUUID = request.locals.accessToken.access;
+async function loginValidation(request, response) {
+    try {
+        var accessUUID = request.locals.accessToken.access;
     
-    Access.findOne({
-        where: {
-            UUID: accessUUID,
-            active: true
-        }
-    }).then(access => {
+        var access = await Access.findOne({
+            where: {
+                UUID: accessUUID,
+                active: true
+            }
+        });
+
         if (access !== null)
             response.sendStatus(200);
         else
             response.sendStatus(401);
-    }).catch(() => {
+    } catch (err) {
         response.sendStatus(401);
-    });
+    }
 }
 
 exports.loginUser = [validateFields, findUser, validatePassword, getUserAgent, saveAccess, buildToken];

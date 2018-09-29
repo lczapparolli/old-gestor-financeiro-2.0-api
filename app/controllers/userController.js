@@ -3,38 +3,32 @@ const transformValidation = require('../helpers/transformValidation');
 const User = db.User;
 
 
-function validateUserFields(request, response, next) {
-    var user = User.build({
-        name: request.body.name,
-        email: request.body.email,
-        password: request.body.password,
-        active: true
-    });
-
-    user.validate().then(user => {
+async function validateUserFields(request, response, next) {
+    try {
+        var user = await User.build({
+            name: request.body.name,
+            email: request.body.email,
+            password: request.body.password,
+            active: true
+        }).validate();
+    
         response.locals.user = user;
         next();
-        return null;
-    }).catch(err => {
-        response.status(400).send(
-            transformValidation(err.errors)
-        );
-        return null;
-    });
+    } catch (err) {
+        response.status(400).send(transformValidation(err.errors));
+    }
 }
 
-function validateRegisteredEmail(request, response, next) {
+async function validateRegisteredEmail(request, response, next) {
     var user = request.body;
-    User.count({ where: { email: user.email } }).then(count => {
-        if (count === 0)
-            next();
-        else {
-            response.status(400).send([
-                { field: 'email', message: 'Email already used' }
-            ]);
-        }
-        return null;
-    });
+    var count = await User.count({ where: { email: user.email } });
+    if (count === 0)
+        next();
+    else {
+        response.status(400).send([
+            { field: 'email', message: 'Email already used' }
+        ]);
+    }
 }
 
 function createUser(request, response) {
