@@ -16,7 +16,8 @@ var server = chai.request(app).keepOpen();
 var userData = {
     name: 'Login test',
     email: 'login@test.com',
-    password: 'pass123'
+    password: 'pass123',
+    token: null
 };
 
 describe('LoginController', function() {
@@ -95,7 +96,9 @@ describe('LoginController', function() {
             return Promise.all([
                 expect(response).to.eventually.have.property('status', 200),
                 expect(response).to.eventually.have.nested.property('body.token').not.empty,
-                response.then(response => { jwt.verify(response.body.token, tokenSecret); })
+                response.then(response => { 
+                    jwt.verify(response.body.token, tokenSecret); 
+                })
             ]);
         });
 
@@ -127,17 +130,46 @@ describe('LoginController', function() {
     });
 
     describe('Token validation', () => {
+        before(() => {
+            var response = server.post('/users/login').send({
+                email: userData.email,
+                password: userData.password
+            });
+
+            return response.then(response => {
+                userData.token = response.body.token;
+            });
+        });
+        
         it('Should have a method for login validation', () => {
             var response = server.get('/users/login').send();
             return expect(response).to.eventually.have.property('status').not.equal(404);
         });
 
+        it('Should fail when a token is not provided', () => {
+            var response = server.get('/users/login').send();
+            return expect(response).to.eventually.have.property('status').equal(401);
+        });
+
         it('Should validate the JWT token', () => {
-            chai.assert.fail(true, true, 'Not implemented');
+            var response = server.get('/users/login').set('x-access-token', userData.token).send();
+            return expect(response).to.eventually.have.property('status').equal(200);            
         });
 
         it('Should fail when invalid JWT token is provided', () => {
-            chai.assert.fail(true, true, 'Not implemented');
+            var invalidToken = jwt.sign({access: ''}, tokenSecret);
+            var response = server.get('/users/login').set('x-access-token', invalidToken).send();
+            
+            return expect(response).to.eventually.have.property('status').equal(401);            
+        });
+
+        it('Should fail when an invalid secret is used', () => {
+            var decodedToken = jwt.decode(userData.token);
+            var newToken = jwt.sign({ access: decodedToken.access }, 'invalid secret');
+            var response = server.get('/users/login').set('x-access-token', newToken).send();
+            
+            return expect(response).to.eventually.have.property('status').equal(401);            
+
         });
     });
 });
