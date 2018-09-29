@@ -17,13 +17,11 @@ var accessData = {
 };
 
 describe('Access model', function() {
-    before(() => {
-        var user = db.User.build(userData);
+    before(async () => {
+        var user = await db.User.build(userData).save();
 
-        return user.save().then(newUser => {
-            userData.id = newUser.id;
-            accessData.userId = newUser.id;
-        });
+        userData.id = user.id;
+        accessData.userId = user.id;
     });
 
     it('Should exists a Access model', () => {
@@ -43,10 +41,10 @@ describe('Access model', function() {
         expect(access).respondTo('setUser');
     });
 
-    it('Should persist to database', () => {
-        var access = db.Access.build(accessData);
+    it('Should persist to database', async () => {
+        var access = await db.Access.build(accessData).save();
 
-        expect(access.save()).to.be.fulfilled.and.eventually.have.property('id').greaterThan(0);
+        expect(access).to.have.property('id').greaterThan(0);
     });
 
     it('Should validate null userId', () => {
@@ -98,16 +96,14 @@ describe('Access model', function() {
         return expect(access.validate()).to.be.rejected.and.eventually.have.nested.property('errors[0].validatorKey', 'futureDate');
     });
 
-    it('Should validate duplicated UUID', () => {
+    it('Should validate duplicated UUID', async () => {
         var access = db.Access.build(accessData);
         var UUID = access.UUID;
         
-        return access.save().then(() => {
-            var newAccess = db.Access.build(accessData);
-            newAccess.UUID = UUID;
+        await access.save();
+        var newAccess = db.Access.build(accessData);
+        newAccess.UUID = UUID;
 
-            var save = newAccess.save();
-            return expect(save).to.be.rejected.and.eventually.have.nested.property('errors[0].validatorKey', 'not_unique');
-        });
+        return expect(newAccess.save()).to.be.rejected.and.eventually.have.nested.property('errors[0].validatorKey', 'not_unique');
     });
 });

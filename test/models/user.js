@@ -26,10 +26,10 @@ describe('User model', function() {
         expect(user).to.have.property('active');
     });
 
-    it('Should persist to database', () => {
-        var user = db.User.build(userData);
+    it('Should persist to database', async () => {
+        var user = await db.User.build(userData).save();
 
-        return expect(user.save()).to.be.fulfilled.and.eventually.have.property('id').greaterThan(0);
+        expect(user).to.have.property('id').greaterThan(0);
     });
 
     it('Should validate null name', () => {
