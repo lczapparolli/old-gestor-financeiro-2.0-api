@@ -50,7 +50,7 @@ gulp.task('db:cleanup', () => {
 
 //Exec Tasks-----------------------------
 gulp.task('exec:express', ['db:migrate'], () => {
-    var server = liveServer.new('./index.js');
+    var server = liveServer('./index.js', { env: { NODE_ENV: 'development', TOKEN_SECRET: 'development_secret_key' } });
     server.start();
     gulp.watch(['index.js', 'app/**/*.js'], file => {
         server.start();

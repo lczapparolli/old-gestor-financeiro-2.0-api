@@ -35,6 +35,6 @@ app.post('/users', UserController.createUser);
 app.post('/users/login', LoginController.loginUser);
 app.get('/users/login', LoginController.loginValidation);
 
-module.exports = app.listen(3000, () => {
+module.exports = app.listen(3030, () => {
 });
 
