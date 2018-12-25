@@ -1,7 +1,7 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const jwt = require('jsonwebtoken');
-const app = require('../../index');
+const app = require('../../App');
 const db = require('../../app/models/db');
 
 const tokenSecret = process.env.TOKEN_SECRET;
