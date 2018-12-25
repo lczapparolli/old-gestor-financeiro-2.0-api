@@ -15,10 +15,20 @@ function signToken(payload) {
     return jwt.sign(payload, tokenSecret);
 }
 
+/**
+ * Returns the access token of an request
+ * @param {Object} request Express request object
+ * @param {function} request.get Returns a header of the request
+ * @returns {string} The request access token
+ */
 function getToken(request) {
     return request.get('x-access-token');
 }
 
+/**
+ * Returns a middleware configured to validate the presency of the access token.
+ * The valid token is present into `locals.accessToken` property
+ */
 function getMiddleware() {
     return expressJWT({
         secret: tokenSecret,
