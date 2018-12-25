@@ -1,7 +1,7 @@
+//Libs
 const express = require('express');
 const parser = require('body-parser');
 const morgan = require('morgan');
-
 //Controllers
 const UserController = require('./app/controllers/userController');
 const LoginController = require('./app/controllers/loginController');
@@ -11,6 +11,7 @@ const auth = require('./app/helpers/auth');
 const app = express();
 const env = process.env.NODE_ENV || 'development';
 
+//Configuring middlewares
 app.use(parser.json());
 app.use(auth.getMiddleware().unless({
     path: [ 
@@ -30,11 +31,9 @@ app.get('/', (request, response) => {
 });
 
 //Users
-app.post('/users', UserController.createUser);
+app.use('/users', UserController);
 //Login
-app.post('/users/login', LoginController.loginUser);
-app.get('/users/login', LoginController.loginValidation);
+app.use('/users/login', LoginController);
 
-module.exports = app.listen(3030, () => {
-});
+module.exports = app.listen(3030, () => { });
 

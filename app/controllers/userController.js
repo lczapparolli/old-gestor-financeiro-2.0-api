@@ -1,5 +1,10 @@
+//Libs
 const db = require('../models/db');
+const express = require('express');
+//Helpers
 const transformValidation = require('../helpers/transformValidation');
+
+const router = express.Router();
 const User = db.User;
 
 /**
@@ -58,7 +63,7 @@ async function validateRegisteredEmail(request, response, next) {
  * @param {Object} response.locals Local data to be used by subsequent middlewares 
  * @param {Object} response.locals.user Database object with user data
  */
-function createUser(request, response) {
+function saveUser(request, response) {
     response.locals.user.save().then(() => {
         response.sendStatus(200);
     }).catch(() => {
@@ -66,4 +71,10 @@ function createUser(request, response) {
     });
 }
 
-exports.createUser = [validateUserFields, validateRegisteredEmail, createUser];
+//Functions chain
+const createUser = [validateUserFields, validateRegisteredEmail, saveUser];
+
+//Defining routes
+router.post('/', createUser);
+
+module.exports = router;

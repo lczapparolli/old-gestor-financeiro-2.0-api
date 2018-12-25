@@ -1,8 +1,12 @@
+//Libs
 const db = require('../models/db');
+const express = require('express');
+//Helpers
 const crypt = require('../helpers/crypt');
 const validation = require('../helpers/validation');
 const auth = require('../helpers/auth');
 
+const router = express.Router();
 const User = db.User;
 const Access = db.Access;
 
@@ -164,5 +168,11 @@ async function loginValidation(request, response) {
     }
 }
 
-exports.loginUser = [validateFields, findUser, validatePassword, getUserAgent, saveAccess, buildToken];
-exports.loginValidation = [loginValidation];
+//Functions chain
+const loginUser = [validateFields, findUser, validatePassword, getUserAgent, saveAccess, buildToken];
+
+//Defining routes
+router.post('/', loginUser);
+router.get('/', loginValidation);
+
+module.exports = router;
