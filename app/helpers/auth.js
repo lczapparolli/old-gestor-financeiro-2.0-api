@@ -33,6 +33,7 @@ function getMiddleware() {
     return expressJWT({
         secret: tokenSecret,
         requestProperty: 'locals.accessToken',
+        algorithms: ['EdDSA'],
         getToken: getToken
     });
 }
