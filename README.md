@@ -28,16 +28,15 @@ This API is built with NodeJS environment and uses the following packages:
 
 ## Setup
 
-First install NodeJS and NPM
-
-1. Install [Gulp](https://gulpjs.com/) globally
+1. Install NodeJS and NPM
+1. Install Sqlite database
 1. Install dependencies: `npm install`
 
 ## Run
 
-Just run `gulp run`
+Just run `npm start` or `npm test`
 
-Run `gulp --tasks` for more options
+Run `node_modules/.bin/gulp --tasks` for more options
 
 ## Deploy
 
