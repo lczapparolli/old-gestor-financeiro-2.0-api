@@ -26,8 +26,8 @@
     "gulp": "^4.0.2",
     "gulp-eslint": "^5.0.0",
     "gulp-live-server": "0.0.31",
-    "gulp-mocha": "^6.0.0",
-    "sequelize-cli": "^4.1.1",
+    "gulp-mocha": "^8.0.0",
+    "sequelize-cli": "^6.2.0",
     "sqlite3": "^5.0.2"
   }
 }
